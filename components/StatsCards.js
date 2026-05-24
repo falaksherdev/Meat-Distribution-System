@@ -8,17 +8,14 @@ import {
 } from "@heroicons/react/24/outline";
 
 export default function StatsCards({ stats }) {
-  // Proper rounding function
   const formatNumber = (num) => {
     if (typeof num !== "number") return num;
-    // Round to 2 decimal places properly
     return Math.round(num * 100) / 100;
   };
 
   const formatValue = (value, unit = "") => {
     if (typeof value !== "number") return value;
     const rounded = formatNumber(value);
-    // Agar decimal hai toh 2 digits dikhao, nahi toh integer
     const formatted =
       rounded % 1 === 0 ? rounded.toString() : rounded.toFixed(2);
     return formatted + unit;
@@ -70,23 +67,27 @@ export default function StatsCards({ stats }) {
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 mb-8">
+    <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3 sm:gap-4 mb-8">
       {cards.map((card, index) => {
         const Icon = card.icon;
         return (
           <div
             key={index}
-            className="bg-white rounded-xl shadow-md p-4 hover:shadow-lg transition-shadow"
+            className="bg-white rounded-xl shadow-md p-3 sm:p-4 hover:shadow-lg transition-shadow"
           >
-            <div className="flex items-center justify-between mb-3">
-              <div className={`${card.bgColor} p-2 rounded-lg`}>
-                <Icon className={`w-5 h-5 ${card.textColor}`} />
+            <div className="flex items-center justify-between mb-2 sm:mb-3">
+              <div className={`${card.bgColor} p-1.5 sm:p-2 rounded-lg`}>
+                <Icon className={`w-4 h-4 sm:w-5 sm:h-5 ${card.textColor}`} />
               </div>
-              <span className={`text-2xl font-bold ${card.textColor}`}>
+              <span
+                className={`text-lg sm:text-2xl font-bold ${card.textColor}`}
+              >
                 {card.value}
               </span>
             </div>
-            <p className="text-gray-600 text-sm font-medium">{card.title}</p>
+            <p className="text-gray-600 text-xs sm:text-sm font-medium">
+              {card.title}
+            </p>
           </div>
         );
       })}

@@ -36,19 +36,19 @@ export default function AddRecipientForm({ options, onAdd, year }) {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-md p-6 mb-8">
-      <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+    <div className="bg-white rounded-xl shadow-md p-4 sm:p-6 mb-8">
+      <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
         <PlusIcon className="w-5 h-5 text-green-600" />
         Add New Recipient
       </h3>
 
-      <form onSubmit={handleSubmit} className="flex gap-4 flex-wrap">
+      <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4">
         <input
           type="text"
           placeholder="Person Name"
           value={formData.name}
           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-          className="flex-1 min-w-[200px] px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
           required
         />
 
@@ -57,7 +57,7 @@ export default function AddRecipientForm({ options, onAdd, year }) {
           onChange={(e) =>
             setFormData({ ...formData, amount_grams: e.target.value })
           }
-          className="w-48 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="w-full sm:w-48 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
           required
         >
           <option value="">Select Amount</option>

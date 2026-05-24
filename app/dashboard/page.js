@@ -19,7 +19,6 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState("all");
 
-  // Total Ghost Manager states
   const [ghostYears, setGhostYears] = useState([]);
   const [selectedGhostYear, setSelectedGhostYear] = useState(2025);
   const [ghostAmount, setGhostAmount] = useState("");
@@ -97,8 +96,6 @@ export default function DashboardPage() {
 
   const saveYearlySettings = async (year, newTotal) => {
     try {
-      console.log("Saving - Year:", year, "Amount:", newTotal);
-
       const response = await fetch("/api/settings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -106,7 +103,6 @@ export default function DashboardPage() {
       });
 
       const data = await response.json();
-      console.log("Save Response:", data);
 
       if (response.ok) {
         if (year === selectedYear) {
@@ -198,19 +194,16 @@ export default function DashboardPage() {
     router.push("/login");
   };
 
-  // Helper function to format numbers to 2 decimal places
   const formatNumber = (num) => {
     if (typeof num !== "number") return num;
     return Math.round(num * 100) / 100;
   };
 
-  // Filter recipients for table only
   const filteredRecipients = recipients.filter((recipient) => {
     if (statusFilter === "all") return true;
     return recipient.status === statusFilter;
   });
 
-  // Stats based on ALL recipients (unfiltered)
   const stats = {
     totalGhost: totalGhost,
     distributed: formatNumber(
@@ -244,52 +237,49 @@ export default function DashboardPage() {
         onLogout={handleLogout}
       />
 
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1 overflow-auto lg:ml-0">
         <div className="bg-white shadow-sm sticky top-0 z-10">
-          <div className="flex justify-between items-center px-8 py-4">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-800">
-                {activeTab === "dashboard" && "Ghost Distribution Dashboard"}
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center px-4 sm:px-8 py-4 h-20 gap-3">
+            <div className="ml-12 lg:ml-0">
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-800">
+                {activeTab === "dashboard" && "Ghost Distribution"}
                 {activeTab === "totalghost" && "Total Ghost Manager"}
                 {activeTab === "options" && "Options Manager"}
                 {activeTab === "reports" && "Reports & Analytics"}
               </h1>
-              <p className="text-gray-500 text-sm mt-1">
+              <p className="text-gray-500 text-xs sm:text-sm mt-1">
                 Welcome back, {user?.email}
               </p>
             </div>
 
-            <div className="flex gap-3">
-              <select
-                value={selectedYear}
-                onChange={(e) => setSelectedYear(parseInt(e.target.value))}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-              >
-                {[
-                  2024, 2025, 2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033,
-                  2034, 2035,
-                ].map((y) => (
-                  <option key={y} value={y}>
-                    {y}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <select
+              value={selectedYear}
+              onChange={(e) => setSelectedYear(parseInt(e.target.value))}
+              className="w-full sm:w-auto px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+            >
+              {[
+                2024, 2025, 2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033,
+                2034, 2035,
+              ].map((y) => (
+                <option key={y} value={y}>
+                  {y}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
 
-        <div className="p-8">
+        <div className="p-4 sm:p-6 lg:p-8">
           {/* DASHBOARD TAB */}
           {activeTab === "dashboard" && (
             <>
-              {/* Display Total Ghost for selected year */}
-              <div className="bg-gradient-to-r from-blue-700 to-blue-800 rounded-xl shadow-lg p-6 mb-6 border border-blue-600">
-                <div className="flex items-center justify-between">
+              <div className="bg-gradient-to-r from-blue-700 to-blue-800 rounded-xl shadow-lg p-4 sm:p-6 mb-6 border border-blue-600">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                   <div>
-                    <p className="text-sm text-blue-200 font-medium tracking-wide">
+                    <p className="text-xs sm:text-sm text-blue-200 font-medium tracking-wide">
                       Total Ghost for {selectedYear}
                     </p>
-                    <p className="text-4xl font-bold text-white mt-2">
+                    <p className="text-3xl sm:text-4xl font-bold text-white mt-2">
                       {totalGhost} KG
                     </p>
                     <p className="text-xs text-blue-300 mt-3">
@@ -298,7 +288,7 @@ export default function DashboardPage() {
                         : "✓ Ready for distribution"}
                     </p>
                   </div>
-                  <div className="hidden md:block">
+                  <div className="hidden sm:block">
                     <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center backdrop-blur-sm">
                       <svg
                         className="w-8 h-8 text-white"
@@ -318,25 +308,22 @@ export default function DashboardPage() {
                 </div>
               </div>
 
-              {/* Stats Cards - Shows ALL data (unfiltered) */}
               <StatsCards stats={stats} />
-
-              {/* Add Recipient Form */}
               <AddRecipientForm
                 options={options}
                 onAdd={addRecipient}
                 year={selectedYear}
               />
 
-              {/* Filter Buttons - Only for table */}
-              <div className="flex gap-3 items-center justify-between mb-4 mt-6">
+              {/* Mobile Filter Buttons */}
+              <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between mb-4 mt-6">
                 <span className="text-lg font-semibold text-gray-700">
                   Filter by status
                 </span>
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2 w-full sm:w-auto">
                   <button
                     onClick={() => setStatusFilter("all")}
-                    className={`px-4 py-2.5 rounded-lg text-sm font-medium transition-all shadow-sm hover:shadow-md ${
+                    className={`flex-1 sm:flex-none px-4 py-2.5 rounded-lg text-sm font-medium transition-all shadow-sm hover:shadow-md ${
                       statusFilter === "all"
                         ? "bg-gradient-to-r from-gray-700 to-gray-800 text-white shadow-md"
                         : "bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200"
@@ -346,7 +333,7 @@ export default function DashboardPage() {
                   </button>
                   <button
                     onClick={() => setStatusFilter("pending")}
-                    className={`px-4 py-2.5 rounded-lg text-sm font-medium transition-all shadow-sm hover:shadow-md ${
+                    className={`flex-1 sm:flex-none px-4 py-2.5 rounded-lg text-sm font-medium transition-all shadow-sm hover:shadow-md ${
                       statusFilter === "pending"
                         ? "bg-gradient-to-r from-yellow-500 to-orange-500 text-white shadow-md"
                         : "bg-yellow-50 text-yellow-700 hover:bg-yellow-100 border border-yellow-200"
@@ -357,7 +344,7 @@ export default function DashboardPage() {
                   </button>
                   <button
                     onClick={() => setStatusFilter("confirmed")}
-                    className={`px-4 py-2.5 rounded-lg text-sm font-medium transition-all shadow-sm hover:shadow-md ${
+                    className={`flex-1 sm:flex-none px-4 py-2.5 rounded-lg text-sm font-medium transition-all shadow-sm hover:shadow-md ${
                       statusFilter === "confirmed"
                         ? "bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-md"
                         : "bg-green-50 text-green-700 hover:bg-green-100 border border-green-200"
@@ -369,7 +356,6 @@ export default function DashboardPage() {
                 </div>
               </div>
 
-              {/* Recipients Table - Shows filtered data */}
               <RecipientsTable
                 recipients={filteredRecipients}
                 onUpdateStatus={updateStatus}
@@ -382,13 +368,12 @@ export default function DashboardPage() {
           {/* TOTAL GHOST MANAGER TAB */}
           {activeTab === "totalghost" && (
             <div className="space-y-6">
-              {/* Add New Ghost Year Section */}
-              <div className="bg-white rounded-xl shadow-md p-6">
+              <div className="bg-white rounded-xl shadow-md p-4 sm:p-6">
                 <h2 className="text-xl font-bold text-gray-800 mb-4">
                   Add / Update Total Ghost
                 </h2>
-                <div className="flex gap-4 items-end flex-wrap">
-                  <div className="flex-1 min-w-[150px]">
+                <div className="flex flex-col sm:flex-row gap-4 items-stretch sm:items-end">
+                  <div className="flex-1">
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Select Year
                     </label>
@@ -409,7 +394,7 @@ export default function DashboardPage() {
                       ))}
                     </select>
                   </div>
-                  <div className="flex-1 min-w-[150px]">
+                  <div className="flex-1">
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Total Ghost (KG)
                     </label>
@@ -430,24 +415,23 @@ export default function DashboardPage() {
                 </div>
               </div>
 
-              {/* Existing Ghost Years Table */}
               <div className="bg-white rounded-xl shadow-md overflow-hidden">
-                <div className="px-6 py-4 border-b bg-gray-50">
+                <div className="px-4 sm:px-6 py-4 border-b bg-gray-50 overflow-x-auto">
                   <h2 className="text-lg font-semibold text-gray-800">
                     Ghost Records
                   </h2>
                 </div>
                 <div className="overflow-x-auto">
-                  <table className="w-full">
+                  <table className="w-full min-w-[500px]">
                     <thead className="bg-gray-50 border-b">
                       <tr>
-                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">
+                        <th className="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">
                           Year
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">
+                        <th className="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">
                           Total Ghost (KG)
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">
+                        <th className="px-4 sm:px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">
                           Last Updated
                         </th>
                       </tr>
@@ -457,24 +441,24 @@ export default function DashboardPage() {
                         <tr>
                           <td
                             colSpan="3"
-                            className="px-6 py-8 text-center text-gray-500"
+                            className="px-4 sm:px-6 py-8 text-center text-gray-500"
                           >
-                            No records found. Add your first ghost record above.
+                            No records found.
                           </td>
                         </tr>
                       ) : (
                         ghostYears.map((item) => (
                           <tr key={item.year} className="hover:bg-gray-50">
-                            <td className="px-6 py-4 font-medium text-gray-900">
+                            <td className="px-4 sm:px-6 py-4 font-medium text-gray-900">
                               {item.year}
                             </td>
-                            <td className="px-6 py-4">
+                            <td className="px-4 sm:px-6 py-4">
                               <span className="font-semibold text-green-600">
                                 {item.total_ghost_kg}
                               </span>{" "}
                               KG
                             </td>
-                            <td className="px-6 py-4 text-sm text-gray-500">
+                            <td className="px-4 sm:px-6 py-4 text-sm text-gray-500">
                               {new Date(item.updated_at).toLocaleDateString()}
                             </td>
                           </tr>
@@ -495,12 +479,13 @@ export default function DashboardPage() {
           {/* REPORTS TAB */}
           {activeTab === "reports" && (
             <div className="space-y-6">
-              {/* Header Section */}
-              <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl shadow-lg p-6 text-white">
-                <div className="flex items-center justify-between">
+              <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl shadow-lg p-4 sm:p-6 text-white">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                   <div>
-                    <h2 className="text-2xl font-bold">Distribution Report</h2>
-                    <p className="text-blue-100 text-sm mt-1">
+                    <h2 className="text-xl sm:text-2xl font-bold">
+                      Distribution Report
+                    </h2>
+                    <p className="text-blue-100 text-xs sm:text-sm mt-1">
                       Year {selectedYear} | Qurbani Meat Distribution Summary
                     </p>
                   </div>
@@ -522,25 +507,23 @@ export default function DashboardPage() {
                 </div>
               </div>
 
-              {/* Stats Cards Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                {/* Total Ghost Card */}
-                <div className="bg-white rounded-xl shadow-md p-5 border-l-4 border-blue-500 hover:shadow-lg transition-shadow">
+              <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+                <div className="bg-white rounded-xl shadow-md p-3 sm:p-5 border-l-4 border-blue-500 hover:shadow-lg transition-shadow">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-gray-500 font-medium">
+                      <p className="text-xs sm:text-sm text-gray-500 font-medium">
                         Total Ghost
                       </p>
-                      <p className="text-2xl font-bold text-gray-800 mt-1">
+                      <p className="text-lg sm:text-2xl font-bold text-gray-800 mt-1">
                         {stats.totalGhost}{" "}
-                        <span className="text-sm font-normal text-gray-500">
+                        <span className="text-xs font-normal text-gray-500">
                           KG
                         </span>
                       </p>
                     </div>
-                    <div className="bg-blue-100 rounded-xl p-3">
+                    <div className="bg-blue-100 rounded-xl p-2 sm:p-3">
                       <svg
-                        className="w-6 h-6 text-blue-600"
+                        className="w-4 h-4 sm:w-6 sm:h-6 text-blue-600"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -556,23 +539,22 @@ export default function DashboardPage() {
                   </div>
                 </div>
 
-                {/* Distributed Card */}
-                <div className="bg-white rounded-xl shadow-md p-5 border-l-4 border-green-500 hover:shadow-lg transition-shadow">
+                <div className="bg-white rounded-xl shadow-md p-3 sm:p-5 border-l-4 border-green-500 hover:shadow-lg transition-shadow">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-gray-500 font-medium">
+                      <p className="text-xs sm:text-sm text-gray-500 font-medium">
                         Distributed
                       </p>
-                      <p className="text-2xl font-bold text-gray-800 mt-1">
+                      <p className="text-lg sm:text-2xl font-bold text-gray-800 mt-1">
                         {stats.distributed}{" "}
-                        <span className="text-sm font-normal text-gray-500">
+                        <span className="text-xs font-normal text-gray-500">
                           KG
                         </span>
                       </p>
                     </div>
-                    <div className="bg-green-100 rounded-xl p-3">
+                    <div className="bg-green-100 rounded-xl p-2 sm:p-3">
                       <svg
-                        className="w-6 h-6 text-green-600"
+                        className="w-4 h-4 sm:w-6 sm:h-6 text-green-600"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -588,23 +570,22 @@ export default function DashboardPage() {
                   </div>
                 </div>
 
-                {/* Remaining Card */}
-                <div className="bg-white rounded-xl shadow-md p-5 border-l-4 border-yellow-500 hover:shadow-lg transition-shadow">
+                <div className="bg-white rounded-xl shadow-md p-3 sm:p-5 border-l-4 border-yellow-500 hover:shadow-lg transition-shadow">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-gray-500 font-medium">
+                      <p className="text-xs sm:text-sm text-gray-500 font-medium">
                         Remaining
                       </p>
-                      <p className="text-2xl font-bold text-gray-800 mt-1">
+                      <p className="text-lg sm:text-2xl font-bold text-gray-800 mt-1">
                         {stats.remaining}{" "}
-                        <span className="text-sm font-normal text-gray-500">
+                        <span className="text-xs font-normal text-gray-500">
                           KG
                         </span>
                       </p>
                     </div>
-                    <div className="bg-yellow-100 rounded-xl p-3">
+                    <div className="bg-yellow-100 rounded-xl p-2 sm:p-3">
                       <svg
-                        className="w-6 h-6 text-yellow-600"
+                        className="w-4 h-4 sm:w-6 sm:h-6 text-yellow-600"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -620,28 +601,25 @@ export default function DashboardPage() {
                   </div>
                 </div>
 
-                {/* Distribution Rate Card */}
-                <div className="bg-white rounded-xl shadow-md p-5 border-l-4 border-purple-500 hover:shadow-lg transition-shadow">
+                <div className="bg-white rounded-xl shadow-md p-3 sm:p-5 border-l-4 border-purple-500 hover:shadow-lg transition-shadow">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-gray-500 font-medium">
+                      <p className="text-xs sm:text-sm text-gray-500 font-medium">
                         Distribution Rate
                       </p>
-                      <p className="text-2xl font-bold text-gray-800 mt-1">
+                      <p className="text-lg sm:text-2xl font-bold text-gray-800 mt-1">
                         {stats.totalGhost > 0
                           ? (
                               (stats.distributed / stats.totalGhost) *
                               100
                             ).toFixed(1)
                           : 0}
-                        <span className="text-sm font-normal text-gray-500">
-                          %
-                        </span>
+                        %
                       </p>
                     </div>
-                    <div className="bg-purple-100 rounded-xl p-3">
+                    <div className="bg-purple-100 rounded-xl p-2 sm:p-3">
                       <svg
-                        className="w-6 h-6 text-purple-600"
+                        className="w-4 h-4 sm:w-6 sm:h-6 text-purple-600"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -658,9 +636,8 @@ export default function DashboardPage() {
                 </div>
               </div>
 
-              {/* Progress Bar Section */}
-              <div className="bg-white rounded-xl shadow-md p-6">
-                <div className="flex justify-between items-center mb-3">
+              <div className="bg-white rounded-xl shadow-md p-4 sm:p-6">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-3 gap-2">
                   <h3 className="font-semibold text-gray-800">
                     Distribution Progress
                   </h3>
@@ -679,13 +656,12 @@ export default function DashboardPage() {
                     style={{
                       width: `${stats.totalGhost > 0 ? (stats.distributed / stats.totalGhost) * 100 : 0}%`,
                     }}
-                  ></div>
+                  />
                 </div>
               </div>
 
-              {/* Summary Section */}
               <div className="bg-white rounded-xl shadow-md overflow-hidden">
-                <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b">
+                <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-4 sm:px-6 py-4 border-b">
                   <h3 className="font-semibold text-gray-800 flex items-center gap-2">
                     <svg
                       className="w-5 h-5 text-gray-600"
@@ -703,8 +679,8 @@ export default function DashboardPage() {
                     Detailed Summary
                   </h3>
                 </div>
-                <div className="p-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="p-4 sm:p-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div className="space-y-3">
                       <div className="flex justify-between items-center pb-2 border-b">
                         <span className="text-gray-600">Total Recipients</span>
@@ -757,34 +733,11 @@ export default function DashboardPage() {
                       </div>
                     </div>
                   </div>
-
-                  {/* Status Summary Chips */}
-                  <div className="mt-6 pt-4 border-t flex gap-3 flex-wrap">
-                    <div className="flex items-center gap-2">
-                      <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                      <span className="text-sm text-gray-600">
-                        Confirmed: {stats.confirmed} recipients
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                      <span className="text-sm text-gray-600">
-                        Pending: {stats.pending} recipients
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-                      <span className="text-sm text-gray-600">
-                        Total: {stats.totalRecipients} recipients
-                      </span>
-                    </div>
-                  </div>
                 </div>
               </div>
 
-              {/* Quick Stats Footer */}
               <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-4 border border-green-200">
-                <div className="flex items-center justify-between flex-wrap gap-3">
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
                   <div className="flex items-center gap-3">
                     <div className="bg-green-600 rounded-full p-2">
                       <svg
