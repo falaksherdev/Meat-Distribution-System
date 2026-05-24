@@ -239,7 +239,7 @@ export default function DashboardPage() {
 
       <div className="flex-1 overflow-auto lg:ml-0">
         <div className="bg-white shadow-sm sticky top-0 z-10">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center px-4 sm:px-8 py-4 h-20 gap-3">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center px-4 sm:px-8 py-4 sm:h-20 h-auto  gap-3">
             <div className="ml-12 lg:ml-0">
               <h1 className="text-xl sm:text-2xl font-bold text-gray-800">
                 {activeTab === "dashboard" && "Ghost Distribution"}
